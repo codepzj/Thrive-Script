@@ -1,0 +1,63 @@
+services:
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        networks:
+            - thrive_network
+        ports:
+            - 3306:3306
+        volumes:
+            - ./mysql/data/:/var/lib/mysql
+            - ./mysql/conf/my.cnf:/etc/my.cnf
+            - ./mysql/log:/var/log/mysql
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+    server:
+        container_name: server
+        build: ./server
+        ports:
+            - 9003:9003
+        networks:
+            - thrive_network
+        # 只有mysql要自安装才开启
+        depends_on:
+            - mysql
+        environment:
+            PORT: 9003
+            DB_INFO: ${DB_INFO}
+            DB_USERNAME: ${DB_USERNAME}
+            DB_PASSWORD: ${DB_PASSWORD}
+            EMAIL_HOST: ${EMAIL_HOST}
+            EMAIL_PORT: ${EMAIL_PORT}
+            EMAIL_USERNAME: ${EMAIL_USERNAME}
+            EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+            OSS_ACCESS_KEY: ${OSS_ACCESS_KEY}
+            OSS_SECRET_KEY: ${OSS_SECRET_KEY}
+            OSS_BUCKET: ${OSS_BUCKET}
+        restart: always
+    blog:
+        build: ./blog
+        container_name: blog
+        ports:
+            - "9001:9001"
+        networks:
+            - thrive_network
+        depends_on:
+            - server
+        restart: always
+    admin:
+        build: ./admin
+        container_name: admin
+        ports:
+            - "9002:80"
+        networks:
+            - thrive_network
+        depends_on:
+            - server
+        restart: always
+networks:
+  thrive_network:
+    driver: bridge
