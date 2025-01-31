@@ -1,5 +1,8 @@
 # Thrive 博客一键配置脚本
 
+## 部署视频
+【Thrive 博客一键配置脚本】https://www.bilibili.com/video/BV122FEeWEAx?vd_source=717e5631051a8339c2eea7fb70959d5b
+
 ## 前言
 
 该脚本适用于服务器内存达到4G的用户，适用于以下条件
