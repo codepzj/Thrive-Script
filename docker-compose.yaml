@@ -52,7 +52,7 @@ services:
         build: ./admin
         container_name: admin
         ports:
-            - "9002:80"
+            - "9002:4173"
         networks:
             - thrive_network
         depends_on:
